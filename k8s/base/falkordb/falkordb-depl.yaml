@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: falkordb
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  template:
+    metadata:
+      name: falkordb
+    spec:
+      containers:
+        - name: falkordb
+          image: falkordb/falkordb:latest
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: falkordb-data
+              mountPath: /var/lib/falkordb/data
+          restartPolicy: Always
+          imagePullPolicy: IfNotPresent
+      volumes:
+        - name: falkordb-data
+          persistentVolumeClaim:
+            claimName: falkordb

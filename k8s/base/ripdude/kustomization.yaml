@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ripdude-depl.yaml
+  - ripdude-srvc.yaml
+  - ripdude-pvc.yaml
+  - ripdude-pv.yaml
+  - ripdude-cfg.yaml
+labels:
+  - pairs:
+      app: ripdude
+    includeSelectors: true

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cognee-mcp
+data:
+  MCP_DISABLE_DNS_REBINDING_PROTECTION: "true"
+  API_URL: "http://cognee:8000"
+  TRANSPORT_MODE: "http"

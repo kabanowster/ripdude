@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nvidia-metrics
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: nvidia-metrics
+  template:
+    metadata:
+      name: nvidia-metrics
+      labels:
+        app: nvidia-metrics
+    spec:
+      containers:
+        - image: utkuozdemir/nvidia_gpu_exporter:latest
+          name: nvidia-metrics
+          env:
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: utility
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: all
+          imagePullPolicy: IfNotPresent
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nvidia-metrics
+  labels:
+    app: nvidia-metrics
+spec:
+  selector:
+    app: nvidia-metrics
+  ports:
+    - port: 9835
+      name: nvidia-metrics
+      protocol: TCP
+  type: ClusterIP
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nvidia-monitor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: nvidia-metrics
+  endpoints:
+    - port: nvidia-metrics
+      path: /metrics
+      interval: 3s
+      scrapeTimeout: 2s

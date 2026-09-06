@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mcp-inspector
+data:
+  ALLOWED_ORIGINS: 'http://10.140.27.251:30900,http://localhost:30900,http://127.0.0.1:30900'
+  DANGEROUSLY_BIND_ALL_INTERFACES: 'true'
+  DANGEROUSLY_OMIT_AUTH: 'true'

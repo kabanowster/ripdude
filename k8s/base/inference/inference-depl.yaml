@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: inference
+  template:
+    metadata:
+      name: inference
+      labels:
+        app: inference
+    spec:
+      containers:
+        - image: ghcr.io/ggml-org/llama.cpp:server-cuda
+          name: llama
+          imagePullPolicy: IfNotPresent
+          command: [ "/app/llama-server" ]
+          args: [ "--media-path", "/llama/media", "--metrics" ]
+          envFrom:
+            - configMapRef:
+                name: llama
+          volumeMounts:
+            - mountPath: /llama
+              name: llama
+          resources:
+            limits:
+              cpu: "8"
+              memory: 15Gi
+              nvidia.com/gpu: 1
+          securityContext:
+            capabilities:
+              add:
+                - IPC_LOCK
+      volumes:
+        - name: llama
+          persistentVolumeClaim:
+            claimName: llama
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: playwright
+data:
+  SCREEN_WIDTH: "1920"
+  SCREEN_HEIGHT: "1080"
+  MCP_PORT: "3080"
+  PLAYWRIGHT_MCP_BROWSER: chromium
+  PLAYWRIGHT_MCP_PING_TIMEOUT_MS: "0"

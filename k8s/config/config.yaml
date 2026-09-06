@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: global-config
+data:
+  # no trailing slash
+  modules-pv-url-prefix: /home/.../ripdude/data # root dir for modules data storage
+  cluster-pv-url-prefix: /home/.../ripdude/cluster # root dir for agents and project identities

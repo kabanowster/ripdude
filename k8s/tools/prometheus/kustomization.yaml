@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - llama-metrics.yaml
+  - nvidia-metrics.yaml
+  - prometheus-srvc.yaml

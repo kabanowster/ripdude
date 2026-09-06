@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ripdude-ui
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  template:
+    metadata:
+      name: ripdude-ui
+    spec:
+      containers:
+        - name: ripdude-ui
+          image: kabanowster/ripdude-ui:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: ripdude # shared
+          env:
+            - name: CHAINLIT_AUTH_SECRET
+              value: "123"
+          volumeMounts:
+            - mountPath: /harness
+              name: harness
+            - mountPath: /workspace
+              name: workspace
+      volumes:
+        - name: harness
+          persistentVolumeClaim:
+            claimName: ripdude-harness
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: ripdude-workspace
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

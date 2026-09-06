@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llama
+  labels:
+    app: llama
+data:
+  LLAMA_ARG_LOG_TIMESTAMPS: "true"
+  LLAMA_ARG_HOST: "0.0.0.0"
+  LLAMA_ARG_PORT: "8000"
+  LLAMA_ARG_STATIC_PATH: "/llama/static"
+  LLAMA_ARG_MODELS_DIR: "/llama/models"
+  LLAMA_ARG_MODELS_PRESET: /llama/presets.ini
+  LLAMA_ARG_MODELS_MAX: "4"
+  LLAMA_ARG_N_PARALLEL: "1"
+  LLAMA_ARG_MODELS_AUTOLOAD: "true"
+  LLAMA_ARG_JINJA: "true"
+  LLAMA_ARG_ENDPOINT_METRICS: "true"
+  LLAMA_ARG_CACHE_RAM: "-1"

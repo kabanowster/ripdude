@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cognee-ui
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  template:
+    metadata:
+      name: cognee-ui
+    spec:
+      containers:
+        - name: cognee-ui
+          image: cognee/cognee-ui:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: COGNEE_BACKEND_URL
+              value: "http://localhost:30300"
+          restartPolicy: Always
+          imagePullPolicy: IfNotPresent

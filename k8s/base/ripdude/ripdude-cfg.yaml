@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ripdude
+data:
+  AGENT_NAME: ripdude
+  OPENAI_API_BASE: http://llama:8000
+  OPENAI_API_KEY: not-required
+  REASONING_MODEL_NAME: reasoning # model or preset name
+#  REDIS_URL: redis://redis:6379/0
+#  COGNEE_MCP_URL: http://cognee-mcp:8000/mcp
+#  MCP_TOOLS: playwright@http://playwright:3080/sse
+#  REDIS_TTL_DAYS: 7
+#  HARNESS_ROOT: /harness
+#  WORKSPACE_ROOT: /workspace

@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - cognee-ui-depl.yaml
+  - cognee-ui-srvc.yaml
+labels:
+  - pairs:
+      app: cognee-ui
+    includeSelectors: true

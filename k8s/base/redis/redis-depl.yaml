@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  template:
+    metadata:
+      name: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis/redis-stack-server:latest
+          env:
+            - name: REDIS_ARGS
+              value: "--appendonly yes --protected-mode no"
+          ports:
+            - containerPort: 6379
+          restartPolicy: Always
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+          imagePullPolicy: IfNotPresent
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis

@@ -1,0 +1,57 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - cognee/
+  - cognee-mcp/
+  - cognee-ui/
+  - falkordb/
+  - inference/
+  - redis/
+  - redis-ui/
+  - playwright/
+  - ripdude/
+  - ripdude-ui/
+  - ../tools/MCPInspector/
+  - ../config/
+
+replacements:
+  - source:
+      kind: Namespace
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: ".+"
+        reject:
+          - kind: Namespace
+          - labelSelector: "stack=prometheus"
+        fieldPaths:
+          - metadata.namespace
+        options:
+          create: true
+  - source:
+      name: global-config
+      kind: ConfigMap
+      fieldPath: data.modules-pv-url-prefix
+    targets:
+      - select:
+          kind: PersistentVolume
+        reject:
+          - labelSelector: "target=cluster"
+        fieldPaths:
+          - spec.hostPath.path
+        options:
+          delimiter: "/"
+          index: -1
+  - source:
+      name: global-config
+      kind: ConfigMap
+      fieldPath: data.cluster-pv-url-prefix
+    targets:
+      - select:
+          kind: PersistentVolume
+          labelSelector: "target=cluster"
+        fieldPaths:
+          - spec.hostPath.path
+        options:
+          delimiter: "/"
+          index: -1

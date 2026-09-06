@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-inspector
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: mcp-inspector
+    spec:
+      containers:
+        - name: mcp-inspector
+          image: ghcr.io/modelcontextprotocol/inspector
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: mcp-inspector
+          volumeMounts:
+            - mountPath: /home/node/.mcp-inspector
+              name: mcp-inspector
+      volumes:
+        - name: mcp-inspector
+          persistentVolumeClaim:
+            claimName: mcp-inspector
+      restartPolicy: Always

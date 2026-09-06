@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: llama-monitor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: llama
+  endpoints:
+    - port: llama
+      path: /metrics
+      interval: 3s
+      scrapeTimeout: 2s
+      params:
+        model: [ "reasoning" ]

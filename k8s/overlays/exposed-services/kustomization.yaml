@@ -1,0 +1,49 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+
+replacements:
+  - sourceValue: NodePort
+    targets:
+      - select:
+          kind: Service
+          name: "redis|llama|cognee-mcp|falkordb|playwright"
+        fieldPaths:
+          - spec.type
+  - sourceValue: "30379"
+    targets:
+      - select:
+          kind: Service
+          name: redis
+        fieldPaths:
+          - spec.ports.0.nodePort
+        options:
+          create: true
+  - sourceValue: "30000"
+    targets:
+      - select:
+          kind: Service
+          name: llama
+        fieldPaths:
+          - spec.ports.0.nodePort
+        options:
+          create: true
+  - sourceValue: "30088"
+    targets:
+      - select:
+          kind: Service
+          name: cognee-mcp
+        fieldPaths:
+          - spec.ports.0.nodePort
+        options:
+          create: true
+  - sourceValue: "30801"
+    targets:
+      - select:
+          kind: Service
+          name: playwright
+        fieldPaths:
+          - spec.ports.0.nodePort
+        options:
+          create: true

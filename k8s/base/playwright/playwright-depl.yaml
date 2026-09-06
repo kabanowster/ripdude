@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playwright
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  template:
+    metadata:
+      name: playwright
+    spec:
+      containers:
+        - image: ghcr.io/xtr-dev/mcp-playwright-novnc:latest
+          name: playwright
+          envFrom:
+            - configMapRef:
+                name: playwright
+          imagePullPolicy: IfNotPresent
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

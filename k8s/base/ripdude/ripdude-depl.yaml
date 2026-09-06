@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ripdude
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  template:
+    metadata:
+      name: ripdude
+    spec:
+      containers:
+        - name: ripdude
+          image: kabanowster/ripdude:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: ripdude
+          volumeMounts:
+            - mountPath: /harness
+              name: harness
+            - mountPath: /workspace
+              name: workspace
+      volumes:
+        - name: harness
+          persistentVolumeClaim:
+            claimName: ripdude-harness
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: ripdude-workspace
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

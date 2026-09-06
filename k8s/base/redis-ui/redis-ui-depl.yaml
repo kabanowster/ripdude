@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-ui
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  template:
+    metadata:
+      name: redis-ui
+    spec:
+      containers:
+        - name: redis
+          image: redis/redisinsight:latest
+          env:
+            - name: RI_REDIS_HOST0
+              value: "redis"
+          restartPolicy: Always
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+          imagePullPolicy: IfNotPresent
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis

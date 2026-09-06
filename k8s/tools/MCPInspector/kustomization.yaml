@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - mcp-inspector-depl.yaml
+  - mcp-inspector-srvc.yaml
+  - mcp-inspector-pv.yaml
+  - mcp-inspector-pvc.yaml
+  - mcp-inspector-cfg.yaml
+labels:
+  - pairs:
+      app: mcp-inspector
+    includeSelectors: true
