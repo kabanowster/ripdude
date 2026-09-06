@@ -1,36 +1,34 @@
-FROM python:3.11-slim
+FROM python:3.12-slim-trixie
 
-# Prevent Python from writing pyc files and buffering stdout/stderr
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    HARNESS_ROOT="/workspace/my-cluster" \
-    AGENT_NAME="agent-ripdude" \
-    OPENAI_BASE_URL="http://ollama-service:11434/v1" \
-    MODEL_NAME=""
+RUN apt update
+
+RUN apt install -y --no-install-recommends git
+RUN apt install -y --no-install-recommends nodejs
+RUN apt install -y --no-install-recommends npm
+
+RUN python3 -m pip install uv
 
 WORKDIR /app
 
-# Install system utilities
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
 
+ENV HARNESS_ROOT="/harness" \
+	WORKSPACE_ROOT="/workspace" \
+	REDIS_URL="redis://redis:6379/0" \
+	COGNEE_MCP_URL="http://cognee-mcp:8000/mcp" \
+	PLAYWRIGHT_MCP_URL="http://playwright:3080/mcp"
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-RUN playwright install --with-deps chromium
+COPY README.md pyproject.toml uv.lock ./
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-install-project --no-dev --no-editable
 
-# Create unprivileged user matching default host UID (1000)
-RUN useradd -m -u 1000 ripdudeuser && \
-    mkdir -p /workspace/my-cluster && \
-    chown -R ripdudeuser:ripdudeuser /app /workspace
+COPY src/ src/
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev --no-editable
 
-COPY --chown=ripdudeuser:ripdudeuser agent.py server.py tools.py config.py ./
-
-USER ripdudeuser
+ENV PATH="/app/.venv/bin:$PATH"
 
 EXPOSE 8000
 
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["uvicorn", "ripdude.server:app", "--host", "0.0.0.0", "--port", "8000"]
